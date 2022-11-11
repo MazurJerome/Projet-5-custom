@@ -12,6 +12,7 @@ function getID(urlPage){
 
 const actualURL = getURL()
 const idProduct = getID(actualURL)
+
 //ajout du produit
 fetch("http://localhost:3000/api/products/"+idProduct)
     .then (data => data.json())
@@ -29,7 +30,10 @@ fetch("http://localhost:3000/api/products/"+idProduct)
             newOption.innerHTML =valeur
             document.querySelector("#colors").append(newOption)
         }
+        let quantity = document.getElementById("quantity").value
+        console.log(quantity)
+        document.getElementById("addToCart").addEventListener("click",()=>(addBasket({"id":idProduct[0],"name":jsonProduct.name,"price":jsonProduct.price,"color":colors.value,"quantity":quantity})))
 
-        return jsonProduct
-        });
+    });
 
+  
