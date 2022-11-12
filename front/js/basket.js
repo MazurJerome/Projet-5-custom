@@ -17,12 +17,12 @@ function getBasket(){
 //ajout du produit dans le panier
 function addBasket(product) {
     let basket = getBasket()
-    let foundProduct = basket.find(p => p.id === product.id)
-    if(foundProduct != undefined) {
-        foundProduct.quantity ++// plusieur des la premiere?
+    let foundProduct = basket.find(p => p.id == product.id)
+    let foundProductColor = basket.find(p => p.color == product.color)
+    if(foundProduct != undefined && foundProductColor != undefined) {
+        foundProduct.quantity = foundProduct.quantity*1 +product.quantity*1
     }
     else {
-        product.quantity = 1
         basket.push(product)
     }
     saveBasket(basket)
