@@ -22,6 +22,7 @@ fetch("http://localhost:3000/api/products/" + idProduct)
         document.querySelector("#price").innerHTML = `${jsonProduct.price}`
         document.querySelector("#description").innerHTML = `${jsonProduct.description}`
 
+        //recuperation couleur
         const colorTab = jsonProduct.colors.length
         for (let i = 0; i < colorTab; i++) {
             let newOption = document.createElement('option')
@@ -40,13 +41,15 @@ fetch("http://localhost:3000/api/products/" + idProduct)
             e.preventDefault()
             //si couleur et quantite defini
             if (quantity.value > 0 && colors.value != "") {
-                console.log(1)
+                console.log(jsonProduct)
                 addBasket({
                     "id": idProduct[0],
                     "name": jsonProduct.name,
                     "price": jsonProduct.price,
                     "color": colors.value,
-                    "quantity": quantity.value
+                    "quantity": quantity.value,
+                    "image": jsonProduct.imageUrl,
+                    "alt": jsonProduct.altTxt
                 })
                 alert("article(s) ajouté(s)")
             }

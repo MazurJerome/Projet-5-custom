@@ -56,7 +56,7 @@ function getNumberProduct(){
     let basket = getBasket()
     let number = 0
     for (let product of basket){
-        number += product.quantity
+        number += product.quantity*1
     }
     return number
 }
