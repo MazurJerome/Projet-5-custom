@@ -17,16 +17,6 @@ let totalPrice = getTotalPrice()
 
 //chargement articles 
 basket.forEach(element => {
-    /*let name = element.name
-    console.log(name)
-    name = new Product
-    name.name = element.name
-    name.id=element.id
-    name.color=element.color
-    name.price=element.price
-    name.quantity=element.quantity
-    name.img=element.img
-    console.log(name)*/
     document.getElementById("cart__items").innerHTML += 
                 `
                 <article class="cart__item" data-id="${element.id}" data-color="${element.color}">
@@ -51,6 +41,7 @@ basket.forEach(element => {
                 </div>
               </article>
                 `;
+
 })
 
 //changement de quantité
@@ -67,5 +58,27 @@ document.getElementById("totalQuantity").innerHTML +=
 console.log(totalPrice)
 document.getElementById("totalPrice").innerHTML += 
                 `${totalPrice}`
+
+
 //gestion du formulaire
+let formBasket = document.getElementsByClassName("cart__order__form")
+
+addEventListener('submit', function(e) {
+  let verifText = /^[a-zA-Z-\séè]$/;
+  let firstName = document.getElementById("firstName")
+
+    if(firstName.value.trim()== ""){
+      let Error = document.getElementById("firstNameErrorMsg")
+      Error.innerHTML = "Le champ First name est requis."
+      e.preventDefault()
+  } 
+  else if(verifText.test(firstName.value) == false){
+      let Error = document.getElementById("firstNameErrorMsg")
+      Error.innerHTML = "Le champ First name est requis."
+      e.preventDefault()
+  }
+});
+
+
+
 //commander
