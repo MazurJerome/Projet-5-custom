@@ -39,7 +39,6 @@ function removeFromBasket (product) {
 function changeQuantity(product, quantity, color) {
     let basket = getBasket()
     let foundProduct = basket.filter(p => p.id == product)
-    console.log(foundProduct)
     let foundProductColor = foundProduct.find(p => p.color == color)
     if(foundProduct != undefined && foundProductColor != undefined) {
         foundProductColor.quantity = quantity
@@ -64,12 +63,3 @@ function getNumberProduct(){
     return number
 }
 
-//calcul du prix total
-function getTotalPrice() {
-    let basket = getBasket()
-    let total = 0
-    for (let product of basket){
-        total += product.quantity * product.price
-    }
-    return total
-}

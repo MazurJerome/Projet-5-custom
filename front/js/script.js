@@ -6,7 +6,7 @@ class Product{
 //
 // recuperation des produits et integration a la page d'acceuil
 //
-fetch("http://localhost:3000/api/products")
+fetch(APIProducts)
     .then(response => response.json())
     .then (function(jsonListeProducts) {
         //let jsonListeProducts = data.json();

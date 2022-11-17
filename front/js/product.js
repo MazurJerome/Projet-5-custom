@@ -13,7 +13,7 @@ function getID(urlPage) {
 //verification de l'existance du produit
 function verifProduct (id) {
     let ok = false
-    fetch("http://localhost:3000/api/products")
+    fetch(APIProducts)
         .then(response => response.json())
         .then (function(jsonListeProducts) {
             for( let jsonProduct of jsonListeProducts){
@@ -26,7 +26,9 @@ function verifProduct (id) {
                 else{console.log(jsonProduct._id)}
                 console.log(ok)
             }
-            return ok
+            if(ok != true){
+                document.location = 'index.html'
+            }
         })
         
 }
@@ -34,11 +36,10 @@ function verifProduct (id) {
 
 const actualURL = getURL()
 const idProduct = getID(actualURL)
-let verif = verifProduct(idProduct[0])
-console.log(verif)
+const verif = verifProduct(idProduct[0])
 
 //ajout du produit
-fetch("http://localhost:3000/api/products/" + idProduct)
+fetch(APIProducts + idProduct)
     .then(data => data.json())
     .then(jsonProduct => {
         document.querySelector(".item__img").innerHTML = `<img src="${jsonProduct.imageUrl}" alt="${jsonProduct.altTxt}"></img>`
@@ -67,12 +68,8 @@ fetch("http://localhost:3000/api/products/" + idProduct)
             if (quantity.value > 0 && colors.value != "") {
                 addBasket({
                     "id": idProduct[0],
-                    "name": jsonProduct.name,
-                    "price": jsonProduct.price,
                     "color": colors.value,
-                    "quantity": quantity.value,
-                    "image": jsonProduct.imageUrl,
-                    "alt": jsonProduct.altTxt
+                    "quantity": quantity.value
                 })
                 alert("article(s) ajouté(s)")
                 //redirection acceuil
