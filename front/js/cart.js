@@ -11,7 +11,6 @@ class Product {
 let objBasket = localStorage.getItem("basket")
 let objJson = JSON.parse(objBasket)
 const basket = objJson
-console.log(basket)
 let numberObjects = getNumberProduct()
 let totalPrice = getTotalPrice()
 
@@ -27,15 +26,15 @@ basket.forEach(element => {
                   <div class="cart__item__content__description">
                     <h2>${element.name}</h2>
                     <p>${element.color}</p>
-                    <p>${element.price}</p>
+                    <p>${element.price} €</p>
                   </div>
                   <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
                       <p>Qté : </p>
-                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${element.quantity}">
+                      <input type="number" onChange="changeQuantityCart(this.value,this.id);" class="itemQuantity" name="itemQuantity" id="${element.id}+${element.color}" color="${element.color}" min="1" max="100" value="${element.quantity}">
                     </div>
                     <div class="cart__item__content__settings__delete">
-                      <p class="deleteItem">Supprimer</p>
+                      <p class="deleteItem" onClick= "suppressionItem(this.parentElement)" >Supprimer</p>
                     </div>
                   </div>
                 </div>
@@ -43,42 +42,69 @@ basket.forEach(element => {
                 `;
 
 })
+//changement de la quantite via input
+function changeQuantityCart(quantity, idC){
+  const tabIdC = idC.split('+')
+  const id = tabIdC[0]
+  const color = tabIdC[1]
 
-//changement de quantité
-document.getElementById("input#quantity")
-        addEventListener('change', (event) => {
-            let quantity = event.target.value
-            addBasket({}, quantity)
-        });
+  changeQuantity(id, quantity, color)
+  numberObjects = getNumberProduct()
+  document.getElementById("totalQuantity").innerHTML = `${numberObjects}`
+  totalPrice = getTotalPrice()
+  document.getElementById("totalPrice").innerHTML = `${totalPrice}`
+}
+//suppression via bouton
+function suppressionItem(item) {
+  console.log(item)
+  let elem = item.parentElement
+  console.log(elem)
+  let elem1 = elem.nextSibling
+  console.log(elem1)
+
+}
+
 //total article
-console.log(numberObjects)
+
 document.getElementById("totalQuantity").innerHTML += 
                 `${numberObjects}`
 
-console.log(totalPrice)
 document.getElementById("totalPrice").innerHTML += 
                 `${totalPrice}`
 
 
 //gestion du formulaire
-let formBasket = document.getElementsByClassName("cart__order__form")
 
-addEventListener('submit', function(e) {
-  let verifText = /^[a-zA-Z-\séè]$/;
-  let firstName = document.getElementById("firstName")
+  let form = document.querySelector(".cart__order__form")
+  let textRegExp = new RegExp('^[A-Za-z\é\è\ê\ô\ë\ï\ \-]{2,10}$')
+  let AdressRegExp = new RegExp('^[0-9A-Za-z\é\è\ê\ô\ë\ï\ \-]+$')
+  let mailRegExp = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}')
 
-    if(firstName.value.trim()== ""){
-      let Error = document.getElementById("firstNameErrorMsg")
-      Error.innerHTML = "Le champ First name est requis."
-      e.preventDefault()
-  } 
-  else if(verifText.test(firstName.value) == false){
-      let Error = document.getElementById("firstNameErrorMsg")
-      Error.innerHTML = "Le champ First name est requis."
-      e.preventDefault()
+  
+  //verification des formulaires
+  form.firstName.addEventListener("change", function() {verifText(this,textRegExp)})
+  form.lastName.addEventListener("change", function() {verifText(this,textRegExp)})
+  form.city.addEventListener("change", function() {verifText(this,textRegExp)})
+  form.address.addEventListener("change", function() {verifText(this,AdressRegExp)})
+  form.email.addEventListener("change", function() {verifText(this,mailRegExp)})
+  
+
+  const verifText = function(text, regexp){
+    const testInput = regexp.test(text.value)
+
+    let messageForm = text.nextElementSibling
+   
+    if (testInput) {
+      messageForm.innerHTML = "valide"
+      messageForm.style.color = "#1CDB8C"
+    }
+    else {
+      messageForm.innerHTML = "non valide"
+      messageForm.style.color = "#DB1C1C"
+    }
   }
-});
 
 
+  
 
 //commander

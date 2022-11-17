@@ -36,13 +36,16 @@ function removeFromBasket (product) {
 }
 
 //modification quantité produits +/-
-function changeQuantity(product, quantity) {
+function changeQuantity(product, quantity, color) {
     let basket = getBasket()
-    let foundProduct = basket.find(p => p.id == product.id)
-    if(foundProduct != undefined) {
-        foundProduct.quantity += quantity
-        if(foundProduct.quantity <= 0){
-            removeFromBasket(foundProduct)
+    let foundProduct = basket.filter(p => p.id == product)
+    console.log(foundProduct)
+    let foundProductColor = foundProduct.find(p => p.color == color)
+    if(foundProduct != undefined && foundProductColor != undefined) {
+        foundProductColor.quantity = quantity
+        if(foundProductColor.quantity <= 0){
+            removeFromBasket(foundProductColor)
+            window.location.reload()
         }
         else {
             saveBasket(basket)
