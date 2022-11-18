@@ -23,7 +23,35 @@ function getTotalPrice() {
   }
   return total
 }
+//changement de la quantite via input
+function changeQuantityCart(quantity, idC){
+  const tabIdC = idC.split('+')
+  const id = tabIdC[0]
+  const color = tabIdC[1]
 
+  changeQuantity(id, quantity, color)
+  basket.forEach(element => {
+    if (element.id == id ){
+      element.quantity = quantity
+  }
+  })
+  
+  numberObjects = getNumberProduct()
+  document.getElementById("totalQuantity").innerHTML = `${numberObjects}`
+  
+  totalPrice = getTotalPrice()
+
+  document.getElementById("totalPrice").innerHTML = `${totalPrice}`
+  
+}
+//suppression via bouton
+function suppressionItem(item) {
+  let panier = getBasket()
+  panier = panier.filter (p => p.id != item)
+  saveBasket(panier)
+  window.location.reload()
+  
+}
 
 //importer json panier
 let objBasket = localStorage.getItem("basket")
@@ -39,7 +67,7 @@ let totalPrice = getTotalPrice()
 
 function delay(n){
   return new Promise(function(resolve){
-      setTimeout(resolve,n*100);
+      setTimeout(resolve,n*1000);
   });
 }
 async function myAsyncFunction(){
@@ -80,35 +108,7 @@ totalPrice = getTotalPrice()
 
 myAsyncFunction();
 
-//changement de la quantite via input
-function changeQuantityCart(quantity, idC){
-  const tabIdC = idC.split('+')
-  const id = tabIdC[0]
-  const color = tabIdC[1]
 
-  changeQuantity(id, quantity, color)
-  basket.forEach(element => {
-    if (element.id = id ){
-      element.quantity = quantity
-  }
-  });
-  
-  numberObjects = getNumberProduct()
-  document.getElementById("totalQuantity").innerHTML = `${numberObjects}`
-  
-  totalPrice = getTotalPrice()
-
-  document.getElementById("totalPrice").innerHTML = `${totalPrice}`
-  
-}
-//suppression via bouton
-function suppressionItem(item) {
-  let panier = getBasket()
-  panier = panier.filter (p => p.id != item)
-  saveBasket(panier)
-  window.location.reload()
-  
-}
 
 //total article
 

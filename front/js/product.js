@@ -18,13 +18,8 @@ function verifProduct (id) {
         .then (function(jsonListeProducts) {
             for( let jsonProduct of jsonListeProducts){
                 if(jsonProduct._id == id){
-                    console.log(jsonProduct._id)
-                    console.log(id)
-                    console.log("ok")
                     ok = true
                     }
-                else{console.log(jsonProduct._id)}
-                console.log(ok)
             }
             if(ok != true){
                 document.location = 'index.html'
