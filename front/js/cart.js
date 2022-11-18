@@ -14,14 +14,13 @@ function Recup (basket){
         })  
   })
 }
+
 //calcul du prix total
 function getTotalPrice() {
   let total = 0
   for (let product of basket){
       total += product.quantity * product.price
   }
-  console.log(total)
-  console.log(basket)
   return total
 }
 
@@ -32,11 +31,11 @@ let objJson = JSON.parse(objBasket)
 let basket = objJson
 //recuperation du reste des infos produits
 let recuperation = Recup(basket)
+console.log(basket)
 
 let numberObjects = getNumberProduct()
 let totalPrice = getTotalPrice()
 //chargement articles 
-console.log(basket)
 
 function delay(n){
   return new Promise(function(resolve){
@@ -88,10 +87,17 @@ function changeQuantityCart(quantity, idC){
   const color = tabIdC[1]
 
   changeQuantity(id, quantity, color)
+  basket.forEach(element => {
+    if (element.id = id ){
+      element.quantity = quantity
+  }
+  });
+  
   numberObjects = getNumberProduct()
   document.getElementById("totalQuantity").innerHTML = `${numberObjects}`
-  console.log(basket)
+  
   totalPrice = getTotalPrice()
+
   document.getElementById("totalPrice").innerHTML = `${totalPrice}`
   
 }

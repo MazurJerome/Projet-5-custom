@@ -59,6 +59,7 @@ function getNumberProduct(){
     let number = 0
     for (let product of basket){
         number += product.quantity*1
+        saveBasket(basket)
     }
     return number
 }
