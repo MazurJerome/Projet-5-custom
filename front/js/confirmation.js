@@ -1,8 +1,5 @@
-//url de la page
-function getURL() {
-    return window.location.href
-}
-//id du produit
+
+//recuperation du numero de commande
 function getorderId(urlPage) {
     const url = new URL(urlPage)
     const searchParams = new URLSearchParams(url.search)
@@ -13,5 +10,6 @@ function getorderId(urlPage) {
 const actualURL = getURL()
 const idProduct = getorderId(actualURL)
 
+//affichage du numero de commande
 const commande = document.getElementById("orderId")
 commande.innerHTML = `${idProduct}`

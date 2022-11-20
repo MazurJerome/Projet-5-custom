@@ -3,7 +3,7 @@ function saveBasket(basket){
     localStorage.setItem("basket", JSON.stringify(basket))
 }
 
-//recuperation du panier
+//recuperation du panier et création en cas d'absence
 function getBasket(){
     let basket = localStorage.getItem("basket")
     if(basket == null){
@@ -37,10 +37,14 @@ function addBasket(product) {
     saveBasket(basket)
 }
 
-//suppression d'un produit
-function removeFromBasket (product) {
+//suppression d'un produit en prenant l'index en fonction de l'id et de la couleur
+function removeFromBasket (product, color) {
     let basket = getBasket()
-    basket = basket.filter (p => p.id != product.id)
+    for (let index of basket)
+    if( index.id == product && index.color == color){
+    const indexT = basket.indexOf(index)
+    basket.splice(indexT, 1)
+}
     saveBasket(basket)
 }
 
@@ -52,7 +56,7 @@ function changeQuantity(product, quantity, color) {
     if(foundProduct != undefined && foundProductColor != undefined) {
         foundProductColor.quantity = quantity
         if(foundProductColor.quantity <= 0){
-            removeFromBasket(foundProductColor)
+            removeFromBasket(foundProductColor.id, foundProductColor.color)
             window.location.reload()
         }
         else {

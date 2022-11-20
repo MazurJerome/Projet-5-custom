@@ -1,3 +1,4 @@
+//creation d'une class pour enregistrer les produits
 class Product{
     constructor(jsonProduct){
         jsonProduct && Object.assign(this, jsonProduct);
@@ -9,7 +10,6 @@ class Product{
 fetch(APIProducts)
     .then(response => response.json())
     .then (function(jsonListeProducts) {
-        //let jsonListeProducts = data.json();
         for( let jsonProduct of jsonListeProducts){
             let product = new Product(jsonProduct);
             document.getElementById("items").innerHTML += 
@@ -21,6 +21,6 @@ fetch(APIProducts)
                         <p class="productDescription">${product.description}</p>
                         </article>
                     </a>
-            `;
+            `
         }
-    });
+    })

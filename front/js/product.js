@@ -1,16 +1,23 @@
+//
+//
+// fonctions
+//
+//
 
-//url de la page
+//fonction pour recuperer l'url de la page
 function getURL() {
     return window.location.href
 }
-//id du produit
+
+//fonction pour recuperer l'id du produit
 function getID(urlPage) {
     const url = new URL(urlPage)
     const searchParams = new URLSearchParams(url.search)
     const id = searchParams.getAll("id")
     return id
 }
-//verification de l'existance du produit
+
+//verification de l'existance du produit et redirection sur la page d'acceuil si le produit n'existe pas
 function verifProduct (id) {
     let ok = false
     fetch(APIProducts)
@@ -24,15 +31,17 @@ function verifProduct (id) {
             if(ok != true){
                 document.location = 'index.html'
             }
-        })
-        
+        })   
 }
-
-
+//
+//fin des fonctions
+//
+//debut du code
+//
+//recuperation du produit
 const actualURL = getURL()
 const idProduct = getID(actualURL)
 const verif = verifProduct(idProduct[0])
-
 //ajout du produit
 fetch(APIProducts + idProduct)
     .then(data => data.json())
@@ -56,7 +65,7 @@ fetch(APIProducts + idProduct)
         addEventListener('change', (event) => {
             const quantity = event.target.value
         })
-
+// detection du click sur le bouton ajouter au panier et ajout du produit si couleur et nombre defini
         document.getElementById("addToCart").addEventListener("click", (e) => {
             e.preventDefault()
             //si couleur et quantite defini
@@ -67,13 +76,13 @@ fetch(APIProducts + idProduct)
                     "quantity": quantity.value
                 })
                 alert("article(s) ajouté(s)")
-                //redirection acceuil
+                //redirection acceuil apres ajout
                 document.location = 'index.html'
             }
+            //si couleur et/ou nombre non defini
             else {
                 alert("veuillez saissir une couleur et un nombre")
             }
 
         })
-    });
-
+    })
