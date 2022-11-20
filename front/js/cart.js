@@ -15,14 +15,7 @@ function Recup (basket){
   })
 }
 
-//calcul du prix total
-function getTotalPrice() {
-  let total = 0
-  for (let product of basket){
-      total += product.quantity * product.price
-  }
-  return total
-}
+
 //changement de la quantite via input
 function changeQuantityCart(quantity, idC){
   const tabIdC = idC.split('+')
@@ -51,6 +44,17 @@ function suppressionItem(item) {
   saveBasket(panier)
   window.location.reload()
   
+}
+
+//test de toute les valeurs du formulaire
+function testFormulaire (contact){
+  let test = true
+  for (const value in contact) {
+    if (contact[value] == "0" ){
+      test = false
+    }
+  }
+  return test
 }
 
 //importer json panier
@@ -123,13 +127,20 @@ document.getElementById("totalPrice").innerHTML +=
   let textRegExp = new RegExp('^[A-Za-z\é\è\ê\ô\ë\ï\ \-]{2,10}$')
   let AdressRegExp = new RegExp('^[0-9A-Za-z\é\è\ê\ô\ë\ï\ \-]+$')
   let mailRegExp = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}')
+  let contact = {
+    firstName: 0,
+    lastName: 0,
+    address: 0,
+    city: 0,
+    email: 0
+  }
 
   
   //verification des formulaires
   form.firstName.addEventListener("change", function() {verifText(this,textRegExp)})
   form.lastName.addEventListener("change", function() {verifText(this,textRegExp)})
-  form.city.addEventListener("change", function() {verifText(this,textRegExp)})
   form.address.addEventListener("change", function() {verifText(this,AdressRegExp)})
+  form.city.addEventListener("change", function() {verifText(this,textRegExp)})
   form.email.addEventListener("change", function() {verifText(this,mailRegExp)})
   
 
@@ -137,14 +148,19 @@ document.getElementById("totalPrice").innerHTML +=
     const testInput = regexp.test(text.value)
 
     let messageForm = text.nextElementSibling
-   
     if (testInput) {
       messageForm.innerHTML = "valide"
       messageForm.style.color = "#1CDB8C"
+      let val = text.name
+      contact[val] = text.value
+
     }
     else {
       messageForm.innerHTML = "non valide"
       messageForm.style.color = "#DB1C1C"
+      console.log(text.value)
+      let val = text.name
+      contact[val] = "0"
     }
   }
 
@@ -152,3 +168,51 @@ document.getElementById("totalPrice").innerHTML +=
   
 
 //commander
+function getFormData() { // Cette fonction enverra le tableau products et l'objet contact en cliquant sur le bouton "finaliser", en complément sendFormData()
+  let products = [];
+  for (let i = 0; i < basket.length; i++) {  // Itération du nombre d'articles par ID, pour l'envoi au serveur sous forme de tableau
+   for (let j = 0; j < basket[i].quantity; j++) {
+      products.push(basket[i].id);
+    }
+  }
+
+  sendFormData({contact, products}); // Appel de la formule ci-dessous en prenant comme arguments les articles commandées et les infos du formulaire
+}
+function sendFormData(data) {
+  fetch(APIProducts + "order", { // "order" pour la requette de commande
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => {
+      console.log(response)
+       // 201 si OK
+
+      return response.json()
+    })
+    .then((response) => {
+      const commande = response.orderId
+      console.log(commande)
+      window.location.href = "./confirmation.html?orderId="+commande // La page de confirmation est chargée
+    })
+
+    .catch((error) => {
+      alert("Les informations ne sont pas en mesure d'être transmises à notre serveur", error)
+    });
+
+    console.log(data)   
+}
+
+
+
+
+const commande = document.getElementById("order")
+      commande.addEventListener('click', (event) => {
+      event.preventDefault()
+      const valideForm = testFormulaire (contact)
+      if(valideForm){
+        getFormData()
+      }
+  })

@@ -55,7 +55,7 @@ fetch(APIProducts + idProduct)
         document.getElementById("input#quantity")
         addEventListener('change', (event) => {
             const quantity = event.target.value
-        });
+        })
 
         document.getElementById("addToCart").addEventListener("click", (e) => {
             e.preventDefault()

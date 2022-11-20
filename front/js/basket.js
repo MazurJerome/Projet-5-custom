@@ -14,6 +14,15 @@ function getBasket(){
     }
 }
 
+//calcul du prix total
+function getTotalPrice() {
+    let total = 0
+    for (let product of basket){
+        total += product.quantity * product.price
+    }
+    return total
+  }
+
 //ajout du produit dans le panier
 function addBasket(product) {
     let basket = getBasket()
