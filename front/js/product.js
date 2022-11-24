@@ -72,8 +72,7 @@ fetch(APIProducts + idProduct)
             if (quantity.value > 0 && colors.value != "") {
                 addBasket({
                     "id": idProduct[0],
-                    "color": colors.value,
-                    "quantity": quantity.value
+                    "option" : [{"color": colors.value, "quantity": quantity.value}]
                 })
                 alert("article(s) ajouté(s)")
                 //redirection acceuil apres ajout

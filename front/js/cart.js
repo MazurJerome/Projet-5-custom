@@ -3,7 +3,15 @@
 // fonctions
 //
 //
-
+function productsFull (prod){
+  fetch(APIProducts)
+    .then(data => data.json())
+    .then(jsonProduct => {
+      for (i=0; i<jsonProduct.length;i++){
+        prod[i]=jsonProduct[i]
+      }
+  })
+}
 //recuperation des infos non sauvegarder dans le local storage
 function Recup (basket){
   fetch(APIProducts)
@@ -31,15 +39,11 @@ function changeQuantityCart(quantity, idC){
   const color = tabIdC[1]
 //changement de la quantité du produit de la couleur recuperé au dessus
   changeQuantity(id, quantity, color)
-  basket.forEach(element => {
-    if (element.id == id ){
-      element.quantity = quantity
-  }
-  })
   //recuperation et affichage du nombre de produit et du prix total
   numberObjects = getNumberProduct()
   document.getElementById("totalQuantity").innerHTML = `${numberObjects}`
-  totalPrice = getTotalPrice()
+
+  totalPrice = getTotalPrice(listProducts)
   document.getElementById("totalPrice").innerHTML = `${totalPrice}`
   
 }
@@ -79,35 +83,42 @@ async function chargementProducts(){
   await delay(1)
   
   basket.forEach(element => {
-    document.getElementById("cart__items").innerHTML += 
+    for (const product of element.option) {
+      const productColor = product[0]
+      const productQauntity = product[1]
+      document.getElementById("cart__items").innerHTML += 
                 `
-                <article class="cart__item" data-id="${element.id}" data-color="${element.color}">
+                <article class="cart__item" data-id="${element.id}" data-color="${product.color}">
                 <div class="cart__item__img">
                   <img src="${element.imageUrl}" alt="${element.altTxt}">
                 </div>
                 <div class="cart__item__content">
                   <div class="cart__item__content__description">
                     <h2>${element.name}</h2>
-                    <p>${element.color}</p>
+                    <p>${product.color}</p>
                     <p>${element.price} €</p>
                   </div>
                   <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
                       <p>Qté : </p>
-                      <input type="number" onChange="changeQuantityCart(this.value,this.id);" class="itemQuantity" name="itemQuantity" id="${element.id}+${element.color}" color="${element.color}" min="1" max="100" value="${element.quantity}">
+                      <input type="number" onChange="changeQuantityCart(this.value,this.id);" class="itemQuantity" name="itemQuantity" id="${element.id}+${product.color}" color="${product.color}" min="1" max="100" value="${product.quantity}">
                     </div>
                     <div class="cart__item__content__settings__delete">
-                      <p class="deleteItem" onClick= "suppressionItem(this.id)" id="${element.id}+${element.color}" >Supprimer</p>
+                      <p class="deleteItem" onClick= "suppressionItem(this.id)" id="${element.id}+${product.color}" >Supprimer</p>
                     </div>
                   </div>
                 </div>
               </article>
                 `
 
-})
+}
+    })
+    
 // on actualise le prix total
-totalPrice = getTotalPrice()
+  totalPrice = getTotalPrice(listProducts)
   document.getElementById("totalPrice").innerHTML = `${totalPrice}`
+  objBasket = localStorage.getItem("basket")
+  basket = JSON.parse(objBasket)
 }
 
 //fonction de test des formulaires, prend la valeur a tester et la regexp a appliquer
@@ -176,19 +187,20 @@ function sendFormData(data) {
 //
   
 //importer du panier a partir du locla storage
+let listProducts = []
+productsFull(listProducts)
 let objBasket = localStorage.getItem("basket")
 let basket = JSON.parse(objBasket)
+
 //recuperation du reste des infos produits
 let recuperation = Recup(basket)
-let numberObjects = getNumberProduct()
-let totalPrice = getTotalPrice()
 //chargement des produits
 chargementProducts()
+//calcul du total
+let numberObjects = getNumberProduct()
 //affichage de la quantite de produits et du prix total
 document.getElementById("totalQuantity").innerHTML += 
                 `${numberObjects}`
-document.getElementById("totalPrice").innerHTML += 
-                `${totalPrice}`
 //gestion du formulaire
 //declaration des differentes regexp
   let form = document.querySelector(".cart__order__form")

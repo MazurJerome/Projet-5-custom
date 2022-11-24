@@ -11,7 +11,7 @@ fetch(APIProducts)
     .then(response => response.json())
     .then (function(jsonListeProducts) {
         for( let jsonProduct of jsonListeProducts){
-            let product = new Product(jsonProduct);
+            let product = new Product(jsonProduct)
             document.getElementById("items").innerHTML += 
             `
                     <a href="./product.html?id=${product._id}">

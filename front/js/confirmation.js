@@ -13,3 +13,6 @@ const idProduct = getorderId(actualURL)
 //affichage du numero de commande
 const commande = document.getElementById("orderId")
 commande.innerHTML = `${idProduct}`
+
+//une fois la commande validé, on vide le panier
+localStorage.clear()
