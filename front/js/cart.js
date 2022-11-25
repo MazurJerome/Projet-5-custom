@@ -12,26 +12,9 @@ function productsFull (prod){
       }
   })
 }
-//recuperation des infos non sauvegarder dans le local storage
-function Recup (basket){
-  fetch(APIProducts)
-    .then(data => data.json())
-    .then(jsonProduct => {
-      jsonProduct.forEach(element => {
-        basket.forEach(prod => {
-          if(element._id == prod.id){
-            prod.name = element.name
-            prod.price = element.price
-            prod.imageUrl = element.imageUrl
-            prod.altTxt = element.altTxt
-          }
-        })
-        })  
-  })
-}
 
 //changement de la quantite via input
-//
+//*****
 //recuperation de la couleur
 function changeQuantityCart(quantity, idC){
   const tabIdC = idC.split('+')
@@ -45,7 +28,6 @@ function changeQuantityCart(quantity, idC){
 
   totalPrice = getTotalPrice(listProducts)
   document.getElementById("totalPrice").innerHTML = `${totalPrice}`
-  
 }
 
 //suppression via bouton et rechargement pour actualiser
@@ -59,6 +41,27 @@ function suppressionItem(item) {
   window.location.reload()
   
 }
+
+//fonction de test des formulaires, prend la valeur a tester et la regexp a appliquer
+function verifText(text, regexp){
+    const testInput = regexp.test(text.value)
+
+    let messageForm = text.nextElementSibling
+    if (testInput) {
+      messageForm.innerHTML = "valide"
+      messageForm.style.color = "#1CDB8C"
+      let val = text.name
+      contact[val] = text.value
+
+    }
+    else {
+      messageForm.innerHTML = "non valide"
+      messageForm.style.color = "#DB1C1C"
+      console.log(text.value)
+      let val = text.name
+      contact[val] = "0"
+    }
+  }
 
 //verification de toutes les donnees du formulaire, si une seule est mauvaise return false
 function testFormulaire (contact){
@@ -83,20 +86,22 @@ async function chargementProducts(){
   await delay(1)
   
   basket.forEach(element => {
-    for (const product of element.option) {
+    listProducts.forEach(prod => {
+      if (element.id == prod._id){
+        for (const product of element.option) {
       const productColor = product[0]
       const productQauntity = product[1]
       document.getElementById("cart__items").innerHTML += 
                 `
-                <article class="cart__item" data-id="${element.id}" data-color="${product.color}">
+                <article class="cart__item" data-id="${element.id}" data-color="${prod.color}">
                 <div class="cart__item__img">
-                  <img src="${element.imageUrl}" alt="${element.altTxt}">
+                  <img src="${prod.imageUrl}" alt="${prod.altTxt}">
                 </div>
                 <div class="cart__item__content">
                   <div class="cart__item__content__description">
-                    <h2>${element.name}</h2>
+                    <h2>${prod.name}</h2>
                     <p>${product.color}</p>
-                    <p>${element.price} €</p>
+                    <p>${prod.price} €</p>
                   </div>
                   <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
@@ -112,7 +117,10 @@ async function chargementProducts(){
                 `
 
 }
+      }
+    
     })
+  })
     
 // on actualise le prix total
   totalPrice = getTotalPrice(listProducts)
@@ -121,26 +129,6 @@ async function chargementProducts(){
   basket = JSON.parse(objBasket)
 }
 
-//fonction de test des formulaires, prend la valeur a tester et la regexp a appliquer
-function verifText(text, regexp){
-    const testInput = regexp.test(text.value)
-
-    let messageForm = text.nextElementSibling
-    if (testInput) {
-      messageForm.innerHTML = "valide"
-      messageForm.style.color = "#1CDB8C"
-      let val = text.name
-      contact[val] = text.value
-
-    }
-    else {
-      messageForm.innerHTML = "non valide"
-      messageForm.style.color = "#DB1C1C"
-      console.log(text.value)
-      let val = text.name
-      contact[val] = "0"
-    }
-  }
 
 //fonction pour creer le tableau products( a partir de basket) et l'envoyer avec l'objet contact en cliquant sur commander,
 // a la fonction sendFormData()
@@ -191,9 +179,6 @@ let listProducts = []
 productsFull(listProducts)
 let objBasket = localStorage.getItem("basket")
 let basket = JSON.parse(objBasket)
-
-//recuperation du reste des infos produits
-let recuperation = Recup(basket)
 //chargement des produits
 chargementProducts()
 //calcul du total
@@ -207,7 +192,7 @@ document.getElementById("totalQuantity").innerHTML +=
   let textRegExp = new RegExp('^[A-Za-z\é\è\ê\ô\ë\ï\ \-]{2,10}$')
   let AdressRegExp = new RegExp('^[0-9A-Za-z\é\è\ê\ô\ë\ï\ \-]+$')
   let mailRegExp = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}')
-//creation du formulaire de contact pour la requte post (si reste a 0 -> infos non rempli ou non valide)
+//creation du formulaire de contact pour la requete post (si reste a 0 -> infos non rempli ou non valide)
   let contact = {
     firstName: 0,
     lastName: 0,
